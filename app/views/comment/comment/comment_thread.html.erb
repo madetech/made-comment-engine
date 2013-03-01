@@ -1,0 +1,22 @@
+<% if !@comments.blank? %>
+<section id="comments">
+  <h4>Comments</h4>
+  <ul>
+    <% for comment in @comments %>
+    <li>
+      <article>
+        <span><%= comment.name %></span><br>
+        <time datetime="<%= comment.created_at.iso8601 %>"><%= comment.created_at %></time>
+        <div>
+          <%= comment.text %>
+        </div>
+      </article>
+    </li>
+    <% end %>
+  </ul>
+</section>
+<% else %>
+  no comments
+<% end %>
+<%= paginate @comments %>
+<%= render :partial => "form" %>
