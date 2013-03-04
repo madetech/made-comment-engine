@@ -22,16 +22,14 @@ module Comment
   end
 
   def self.associate_commentable_objects
+    require File.join(Comment::Engine.root, 'app', 'concerns', 'comment')
+
     Comment.config.associate_objects.each do |obj|
       obj.class_eval do
+        include Comment::CommentConcerns
+
         has_many                        :comments, :class_name => Comment::Opinion, :as => :thread
         accepts_nested_attributes_for   :comments
-
-        #TODO: make this more dynamic, risk of being overwritten
-        # private
-        # def mass_assignment_authorizer(role = :default)
-        #   super + [:comments, :comment_attributes]
-        # end
       end
     end
   end

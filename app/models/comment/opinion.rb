@@ -18,13 +18,8 @@ module Comment
       where('published = ?', true).page view_page
     end
 
-    def to_param
-      url
-    end
-
     def to_s
       name
     end
-
   end
 end
