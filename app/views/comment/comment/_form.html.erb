@@ -1,0 +1,12 @@
+<%= form_for(@new_comment, :url => comment_create_path(@object_str, @object_id)) do |f| %>
+  <div>
+    <%= f.label :name, "#{t('comment.name')}".html_safe %>
+    <%= f.text_field :name, :class => 'required' %>
+  </div>
+  <div>
+    <%= f.label :text, "#{t('comment.text')}".html_safe %>
+    <%= f.text_area :text, :rows => 5, :cols => 40, :class => 'required' %>
+  </div>
+
+  <%= f.submit "Submit" %>
+<% end %>

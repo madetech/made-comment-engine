@@ -1,6 +1,5 @@
 module Comment
   class Opinion < ActiveRecord::Base
-
     belongs_to                :thread, :polymorphic => true
 
     attr_accessible           :name,
