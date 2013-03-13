@@ -9,9 +9,7 @@ module Comment
     validates_presence_of     :name,
                               :text
 
-    default_scope             :order => '`created_at` DESC'
-
-    paginates_per             5
+    default_scope             :order => 'created_at DESC'
 
     def self.paginated(view_page)
       where('published = ?', true).page view_page
