@@ -1,6 +1,15 @@
 require "comment/engine"
 
 module Comment
+  mattr_accessor :cache_sweeper
+  @@cache_sweeper = false
+
+  mattr_accessor :commentable_objects
+  @@commentable_objects = []
+
+  mattr_accessor :per_page
+  @@per_page = 5
+
   class Engine < Rails::Engine
     isolate_namespace Comment
 
@@ -14,17 +23,14 @@ module Comment
   end
 
   def self.config(&block)
-    @@config ||= Comment::Engine::Configuration.new
-
-    yield @@config if block
-
-    return @@config
+    yield self if block
+    return self
   end
 
   def self.associate_commentable_objects
     require File.join(Comment::Engine.root, 'app', 'concerns', 'comment')
 
-    Comment.config.associate_objects.each do |obj|
+    Comment.config.commentable_objects.each do |obj|
       obj.class_eval do
         include Comment::CommentConcerns
 
