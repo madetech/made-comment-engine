@@ -43,7 +43,7 @@ module Comment
     end
 
     def fetch_comments(page)
-      @comments = @object.comments.page(page).per(Comment.config.per_page)
+      @comments = @object.comments.where('published = ?', true).page(page).per(Comment.config.per_page)
     end
 
     def build_new_comment_url_path(object_str, id, page)

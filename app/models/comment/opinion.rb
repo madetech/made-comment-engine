@@ -4,7 +4,8 @@ module Comment
 
     attr_accessible           :name,
                               :text,
-                              :published
+                              :published,
+                              :thread_type
 
     validates_presence_of     :name,
                               :text
