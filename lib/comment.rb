@@ -7,6 +7,9 @@ module Comment
   mattr_accessor :comment_class
   @@comment_class = false
 
+  mattr_accessor :engine_active_admin
+  @@engine_active_admin = true
+
   mattr_accessor :commentable_objects
   @@commentable_objects = []
 
