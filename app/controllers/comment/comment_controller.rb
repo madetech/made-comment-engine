@@ -17,9 +17,10 @@ module Comment
         return false
       end
 
-      @new_comment.published = true
+      @new_comment.published = false
 
       if @new_comment.save
+        flash[:notice] = t('comment.thanks')
         redirect_to comments_thread_path(params[:object], params[:object_id])
       else
         render_form_expanded
@@ -29,7 +30,7 @@ module Comment
     private
     def setup_page
       load_object_from_string_and_id(params[:object], params[:object_id])
-      build_new_comment(params[:opinion])
+      build_new_comment(params[Comment.config.comment_class.to_s.demodulize.underscore.to_sym])
       fetch_comments(params[:page])
       build_new_comment_url_path(params[:object], params[:object_id], params[:page])
     end

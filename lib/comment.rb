@@ -4,6 +4,9 @@ module Comment
   mattr_accessor :cache_sweeper
   @@cache_sweeper = false
 
+  mattr_accessor :comment_class
+  @@comment_class = false
+
   mattr_accessor :commentable_objects
   @@commentable_objects = []
 
@@ -34,7 +37,7 @@ module Comment
       obj.class_eval do
         include Comment::CommentConcerns
 
-        has_many                        :comments, :class_name => Comment::Opinion, :as => :thread
+        has_many                        :comments, :class_name => Comment.config.comment_class, :as => :thread, :dependent => :destroy
         accepts_nested_attributes_for   :comments
       end
     end
