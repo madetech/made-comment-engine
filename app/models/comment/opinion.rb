@@ -19,7 +19,7 @@ module Comment
     default_scope             :order => 'created_at DESC'
 
     def name
-      "#{self.first_name} #{ self.last_name unless self.last_name == '-' }"
+      "#{self.first_name} #{ self.last_name}"
     end
 
     def self.paginated(view_page)
