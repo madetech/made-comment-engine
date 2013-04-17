@@ -36,7 +36,13 @@ module Comment
     end
 
     def load_object_from_string_and_id(object_str, id)
-      @object = object_str.classify.constantize.find(id.to_i)
+      object = object_str.classify.constantize
+
+      if Comment.config.commentable_objects.include?(object)
+        @object = object_str.classify.constantize.find(id.to_i)
+      else
+        raise Exception
+      end
     end
 
     def build_new_comment(post_data)
