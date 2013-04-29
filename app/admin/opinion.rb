@@ -4,6 +4,10 @@ if defined?(ActiveAdmin) and Comment.config.engine_active_admin
       cache_sweeper Comment.config.cache_sweeper if Comment.config.cache_sweeper
     end
 
+    scope :all
+    scope :is_published
+    scope :isnt_published
+
     filter :name
     filter :text
     filter :published

@@ -1,4 +1,6 @@
 module Comment
+  InvalidCommentableTypeError = Class.new(RuntimeError)
+
   class CommentController < Comment::ApplicationController
     helper Comment::ApplicationHelper::FormHelper
     cache_sweeper Comment.config.cache_sweeper, :only => [:new] if Comment.config.cache_sweeper
@@ -33,16 +35,19 @@ module Comment
       build_new_comment(params[Comment.config.comment_class.to_s.demodulize.underscore.to_sym])
       fetch_comments(params[:page])
       build_new_comment_url_path(params[:object], params[:object_id], params[:page])
+      set_sanitized_class_name(params[:object])
     end
 
     def load_object_from_string_and_id(object_str, id)
-      object = object_str.classify.constantize
+      object_class = get_object_class_from_string(object_str)
+      @object = object_class.find(id.to_i)
+    end
 
-      if Comment.config.commentable_objects.include?(object)
-        @object = object_str.classify.constantize.find(id.to_i)
-      else
-        raise Exception
-      end
+    def get_object_class_from_string(object_str)
+      object_class = object_str.sub('_', '::').classify.constantize
+      raise InvalidCommentableTypeError if !Comment.config.commentable_objects.include?(object_class)
+
+      object_class
     end
 
     def build_new_comment(post_data)
@@ -60,6 +65,10 @@ module Comment
     def render_form_expanded
       @new_form_expanded = true
       render 'thread', :layout => false
+    end
+
+    def set_sanitized_class_name(object_str)
+      @sanitized_class = object_str.downcase
     end
 
     def spam_check_passed

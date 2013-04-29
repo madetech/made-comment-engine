@@ -18,12 +18,15 @@ module Comment
 
     default_scope             :order => 'created_at DESC'
 
+    scope                     :is_published, where(:published => true)
+    scope                     :isnt_published, where(:published => false)
+
     def name
       "#{self.first_name} #{ self.last_name }"
     end
 
     def self.paginated(view_page)
-      where('published = ?', true).page view_page
+      is_published.page view_page
     end
 
     def to_s
