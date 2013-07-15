@@ -22,6 +22,8 @@ module Comment
       @new_comment.published = false
 
       if @new_comment.save
+        save_rating
+
         flash[:notice] = t('comment.thanks')
         redirect_to comments_thread_path(params[:object], params[:object_id])
       else
@@ -33,9 +35,11 @@ module Comment
     def setup_page
       load_object_from_string_and_id(params[:object], params[:object_id])
       build_new_comment(params[Comment.config.comment_class.to_s.demodulize.underscore.to_sym])
+      build_new_rating(params[:object], params[Comment.config.rating_class.to_s.demodulize.underscore.to_sym])
       fetch_comments(params[:page])
       build_new_comment_url_path(params[:object], params[:object_id], params[:page])
       set_sanitized_class_name(params[:object])
+      set_rateable(params[:object])
     end
 
     def load_object_from_string_and_id(object_str, id)
@@ -44,14 +48,19 @@ module Comment
     end
 
     def get_object_class_from_string(object_str)
-      object_class = object_str.sub('_', '::').classify.constantize
-      raise InvalidCommentableTypeError if !Comment.config.commentable_objects.include?(object_class)
+      object_class = get_object_class(object_str)
+      raise InvalidCommentableTypeError unless Comment.config.commentable_objects.include?(object_class)
 
       object_class
     end
 
     def build_new_comment(post_data)
       @new_comment = @object.comments.build(post_data)
+    end
+
+    def build_new_rating(object_str, post_data)
+      return unless get_rateable(object_str)
+      @new_rating = @object.ratings.build(post_data)
     end
 
     def fetch_comments(page)
@@ -69,6 +78,26 @@ module Comment
 
     def set_sanitized_class_name(object_str)
       @sanitized_class = object_str.downcase
+    end
+
+    def set_rateable(object_str)
+      @rateable = false
+      @rateable = true if get_rateable(object_str)
+    end
+
+    def get_rateable(object_str)
+      Comment.config.rateable_objects.include?(get_object_class(object_str))
+    end
+
+    def save_rating
+      return if @new_rating.nil? or @new_rating.score.nil?
+
+      @new_rating.ip_address = request.remote_ip
+      @new_rating.save
+    end
+
+    def get_object_class(object_str)
+      object_str.sub('_', '::').classify.constantize
     end
 
     def spam_check_passed

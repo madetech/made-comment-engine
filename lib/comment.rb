@@ -4,6 +4,9 @@ module Comment
   mattr_accessor :cache_sweeper
   @@cache_sweeper = false
 
+  mattr_accessor :cache_sweeper_rating
+  @@cache_sweeper_rating = false
+
   mattr_accessor :comment_class
   @@comment_class = false
 
@@ -18,6 +21,9 @@ module Comment
 
   mattr_accessor :rateable_objects
   @@rateable_objects = []
+
+  mattr_accessor :rating_options
+  @@rating_options = [1, 2, 3, 4, 5]
 
   mattr_accessor :per_page
   @@per_page = 5
@@ -68,4 +74,4 @@ module Comment
       end
     end
   end
-end 
+end
