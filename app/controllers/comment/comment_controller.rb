@@ -4,6 +4,7 @@ module Comment
   class CommentController < Comment::ApplicationController
     helper Comment::ApplicationHelper::FormHelper
     cache_sweeper Comment.config.cache_sweeper, :only => [:new] if Comment.config.cache_sweeper
+    cache_sweeper Comment.config.cache_sweeper_rating, :only => [:new] if Comment.config.cache_sweeper_rating
 
     def thread
       setup_page
