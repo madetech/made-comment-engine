@@ -1,4 +1,2 @@
-module Comment
-  class ApplicationController < ActionController::Base
-  end
+class Comment::ApplicationController < ApplicationController
 end
