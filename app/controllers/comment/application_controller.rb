@@ -1,4 +1,2 @@
-module Comment
-  class ApplicationController < ApplicationController
-  end
+class Comment::ApplicationController < ApplicationController
 end
